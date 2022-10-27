@@ -1,46 +1,58 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
+// import PropTypes from 'prop-types';
 import { Statistics } from './Statistics/Statistics';
 import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
 import { Section } from './Section/Section';
 import { Notification } from './Notification/Notification';
 
-class Feedback extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  };
+export const Feedback = () => {
+  // state = {
+  //   good: 0,
+  //   neutral: 0,
+  //   bad: 0,
+  // };
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
-  handleChangeValue = option => {
-    this.setState({ [option]: this.state[option] + 1 });
-  };
+  const handleChangeValue = option => {
+    switch (option) {
+      case 'good':
+        setGood(prevGood => prevGood + 1);
+        break;
+      case 'neutral':
+        setNeutral(prevNeutral => prevNeutral + 1);
+        break;
+      case 'bad':
+        setBad(prevBad => prevBad + 1);
+        break;
+      default:
+        return;
+    }
 
-  countTotalFeedback = () => {
-    const totalArr = Object.values(this.state);
-    return totalArr.reduce((acc, el) => acc + el, 0);
-  };
-  countPositiveFeedbackPercentage = () => {
-    return Math.round((this.state.good / this.countTotalFeedback()) * 100) || 0;
-  };
+    const countTotalFeedback = () => {
+      return good + neutral + bad;
+    };
+    const countPositiveFeedbackPercentage = () => {
+      return Math.round((good / countTotalFeedback()) * 100) || 0;
+    };
 
-  render() {
     return (
       <>
         <Section title="Please leave feedback">
           <FeedbackOptions
-            options={Object.keys(this.state)}
-            onLeaveFeedback={this.handleChangeValue}
+            options={['good', 'neutral', 'bad']}
+            onLeaveFeedback={handleChangeValue}
           />
         </Section>
         <Section title="Statistics">
-          {this.countTotalFeedback() ? (
+          {countTotalFeedback() ? (
             <Statistics
-              good={this.state.good}
-              neutral={this.state.neutral}
-              bad={this.state.bad}
-              total={this.countTotalFeedback()}
-              positivePercentage={this.countPositiveFeedbackPercentage()}
+              good={good}
+              neutral={neutral}
+              bad={bad}
+              total={countTotalFeedback()}
+              positivePercentage={countPositiveFeedbackPercentage()}
             />
           ) : (
             <Notification message="There is no feedback" />
@@ -48,11 +60,7 @@ class Feedback extends Component {
         </Section>
       </>
     );
-  }
-}
-
-Feedback.propTypes = {
-  state: PropTypes.objectOf(PropTypes.number).isRequired,
+  };
 };
 
 export default Feedback;
