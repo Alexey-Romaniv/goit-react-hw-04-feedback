@@ -1,5 +1,4 @@
-import { useState } from 'react';
-// import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { Statistics } from './Statistics/Statistics';
 import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
 import { Section } from './Section/Section';
@@ -24,36 +23,35 @@ export const App = () => {
       default:
         return;
     }
-
-    const countTotalFeedback = () => {
-      return good + neutral + bad;
-    };
-    const countPositiveFeedbackPercentage = () => {
-      return Math.round((good / countTotalFeedback()) * 100) || 0;
-    };
-
-    return (
-      <>
-        <Section title="Please leave feedback">
-          <FeedbackOptions
-            options={['good', 'neutral', 'bad']}
-            onLeaveFeedback={handleChangeValue}
-          />
-        </Section>
-        <Section title="Statistics">
-          {countTotalFeedback() ? (
-            <Statistics
-              good={good}
-              neutral={neutral}
-              bad={bad}
-              total={countTotalFeedback()}
-              positivePercentage={countPositiveFeedbackPercentage()}
-            />
-          ) : (
-            <Notification message="There is no feedback" />
-          )}
-        </Section>
-      </>
-    );
   };
+  const countTotalFeedback = () => {
+    return good + neutral + bad;
+  };
+  const countPositiveFeedbackPercentage = () => {
+    return Math.round((good / countTotalFeedback()) * 100) || 0;
+  };
+
+  return (
+    <>
+      <Section title="Please leave feedback">
+        <FeedbackOptions
+          options={['good', 'neutral', 'bad']}
+          onLeaveFeedback={handleChangeValue}
+        />
+      </Section>
+      <Section title="Statistics">
+        {countTotalFeedback() ? (
+          <Statistics
+            good={good}
+            neutral={neutral}
+            bad={bad}
+            total={countTotalFeedback()}
+            positivePercentage={countPositiveFeedbackPercentage()}
+          />
+        ) : (
+          <Notification message="There is no feedback" />
+        )}
+      </Section>
+    </>
+  );
 };
